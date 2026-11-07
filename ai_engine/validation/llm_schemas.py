@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ai_engine.prompts.extraction import EXTRACTION_FIELDS
 from ai_engine.prompts.risk_analysis import RISK_CATEGORIES
@@ -13,8 +13,7 @@ class RawExtractedField(BaseModel):
     field_name: FieldName
     value: str | int | float
     unit: str | None = None
-    page: int
-    evidence: str
+    evidence_lines: list[int] = Field(min_length=1, max_length=8)
 
 
 class ExtractionOutput(BaseModel):
@@ -24,8 +23,7 @@ class ExtractionOutput(BaseModel):
 class RawRiskFinding(BaseModel):
     category: RiskCategory
     severity: Literal["low", "medium", "high"]
-    page: int
-    evidence: str
+    evidence_lines: list[int] = Field(min_length=1, max_length=8)
     explanation: str
     suggested_action: str
 

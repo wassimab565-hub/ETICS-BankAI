@@ -12,6 +12,13 @@ Segment = tuple[int, str]  # (page_number, text)
 
 
 @dataclass
+class Line:
+    number: int  # starts at 1, unique inside the chunk
+    page: int
+    text: str
+
+
+@dataclass
 class Chunk:
     index: int
     page_start: int
@@ -20,7 +27,7 @@ class Chunk:
 
     @property
     def text(self) -> str:
-        """Plain text: the reference used to verify evidence later."""
+        """Plain text of the chunk."""
         return "\n\n".join(text for _, text in self.segments)
 
     @property
@@ -34,6 +41,29 @@ class Chunk:
                 current_page = page
             parts.append(text)
         return "\n\n".join(parts)
+
+    @property
+    def lines(self) -> list[Line]:
+        """Non-empty lines of the chunk, numbered from 1, each with its page."""
+        result: list[Line] = []
+        for page, text in self.segments:
+            for raw in text.split("\n"):
+                raw = raw.strip()
+                if raw:
+                    result.append(Line(number=len(result) + 1, page=page, text=raw))
+        return result
+
+    @property
+    def numbered_text(self) -> str:
+        """Text sent to the LLM: [Page N] markers and [L<number>] before each line."""
+        parts: list[str] = []
+        current_page = None
+        for line in self.lines:
+            if line.page != current_page:
+                parts.append(f"[Page {line.page}]")
+                current_page = line.page
+            parts.append(f"[L{line.number}] {line.text}")
+        return "\n".join(parts)
 
 
 def _split_long(text: str, max_chars: int) -> list[str]:

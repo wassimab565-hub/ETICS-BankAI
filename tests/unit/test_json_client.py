@@ -62,8 +62,7 @@ def test_risk_schema_rejects_unknown_category():
             {
                 "category": "foo",
                 "severity": "low",
-                "page": 1,
-                "evidence": "x",
+                "evidence_lines": [1],
                 "explanation": "x",
                 "suggested_action": "x",
             }
@@ -76,19 +75,19 @@ def test_risk_schema_rejects_unknown_category():
 def test_extraction_schema_accepts_number_and_string():
     data = {
         "fields": [
-            {"field_name": "interest_rate", "value": 5.2, "unit": "percent", "page": 2, "evidence": "taux 5,2 %"},
-            {"field_name": "bank_name", "value": "CCF", "unit": None, "page": 1, "evidence": "CCF"},
+            {"field_name": "interest_rate", "value": 5.2, "unit": "percent", "evidence_lines": [2]},
+            {"field_name": "bank_name", "value": "CCF", "unit": None, "evidence_lines": [1]},
         ]
     }
     parsed = ExtractionOutput.model_validate(data)
     assert parsed.fields[0].value == 5.2
     assert parsed.fields[1].value == "CCF"
 
-def test_extraction_schema_requires_value():
-    data = {
-        "fields": [
-            {"field_name": "bank_name", "value": None, "unit": None, "page": 1, "evidence": "CCF"}
-        ]
-    }
+
+def test_extraction_schema_requires_value_and_lines():
+    no_value = {"fields": [{"field_name": "bank_name", "value": None, "unit": None, "evidence_lines": [1]}]}
+    no_lines = {"fields": [{"field_name": "bank_name", "value": "CCF", "unit": None, "evidence_lines": []}]}
     with pytest.raises(ValidationError):
-        ExtractionOutput.model_validate(data)
+        ExtractionOutput.model_validate(no_value)
+    with pytest.raises(ValidationError):
+        ExtractionOutput.model_validate(no_lines)

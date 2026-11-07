@@ -33,14 +33,14 @@ def test_extraction_system_rules():
     text = EXTRACTION_SYSTEM.lower()
     assert "never invent" in text
     assert "untrusted" in text
-    assert "word for word" in text
+    assert "evidence_lines" in text
 
 
 def test_risk_system_rules():
     text = RISK_SYSTEM.lower()
     assert "not a legal judgment" in text
     assert "untrusted" in text
-    assert "word for word" in text
+    assert "evidence_lines" in text
 
 
 def test_prompt_versions_are_defined():
