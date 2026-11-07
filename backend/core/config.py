@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     def database_url(self) -> str:
         pwd = quote_plus(self.db_password)
         return (
-            f"postgresql://{self.db_user}:{pwd}"
+            f"postgresql+psycopg://{self.db_user}:{pwd}"
             f"@{self.db_host}:{self.db_port}/{self.db_name}"
         )
 
