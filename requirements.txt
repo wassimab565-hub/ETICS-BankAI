@@ -11,3 +11,5 @@ python-multipart
 pymupdf
 python-docx
 openpyxl
+pytesseract
+pillow
