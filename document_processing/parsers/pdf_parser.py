@@ -1,14 +1,8 @@
-from dataclasses import dataclass
 from pathlib import Path
 
 import pymupdf
 
-
-@dataclass
-class PageText:
-    page_number: int  # starts at 1
-    text: str
-    char_count: int
+from document_processing.parsers.base import PageText
 
 
 def parse_pdf(path: str | Path) -> list[PageText]:
