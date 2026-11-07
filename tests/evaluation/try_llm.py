@@ -31,6 +31,7 @@ for name, system, prompt, model, key in tasks:
     for item in items:
         found = norm(item.evidence) in reference
         data = item.model_dump()
-        data["evidence"] = data["evidence"][:90]
+        if found:
+            data["evidence"] = data["evidence"][:90]
         print(("  evidence OK  " if found else "  evidence NOT FOUND  "), data)
     print()

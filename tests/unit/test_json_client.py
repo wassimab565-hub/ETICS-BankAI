@@ -83,3 +83,12 @@ def test_extraction_schema_accepts_number_and_string():
     parsed = ExtractionOutput.model_validate(data)
     assert parsed.fields[0].value == 5.2
     assert parsed.fields[1].value == "CCF"
+
+def test_extraction_schema_requires_value():
+    data = {
+        "fields": [
+            {"field_name": "bank_name", "value": None, "unit": None, "page": 1, "evidence": "CCF"}
+        ]
+    }
+    with pytest.raises(ValidationError):
+        ExtractionOutput.model_validate(data)

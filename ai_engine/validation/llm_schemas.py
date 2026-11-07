@@ -11,7 +11,7 @@ RiskCategory = Literal[tuple(RISK_CATEGORIES)]
 
 class RawExtractedField(BaseModel):
     field_name: FieldName
-    value: str | int | float | None = None
+    value: str | int | float
     unit: str | None = None
     page: int
     evidence: str
