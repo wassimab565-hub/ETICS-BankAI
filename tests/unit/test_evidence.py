@@ -15,13 +15,22 @@ def make_chunk():
     return chunk_pages(pages)[0]
 
 
+def sentence_chunk():
+    text = (
+        "Vous pouvez résilier l’Offre, à tout moment, par écrit, moyennant\n"
+        "un préavis de huit jours. Nous pouvons résilier avec un préavis de deux mois, dès\n"
+        "lors que vous ne répondez plus aux critères. L’Offre prend fin."
+    )
+    return chunk_pages([PageText(1, text, len(text))])[0]
+
+
 def test_numbered_text_has_line_and_page_markers():
     text = make_chunk().numbered_text
     assert "[L1] Tenue de compte" in text
     assert "[Page 2]\n[L6] Page deux" in text
 
 
-def test_resolve_evidence_rebuilds_verbatim_quote():
+def test_resolve_evidence_table_is_not_expanded():
     ev = resolve_evidence(make_chunk(), [1, 4])
     assert ev.text == "Tenue de compte Actif Par mois 2,40 €"
     assert (ev.page_start, ev.page_end) == (1, 1)
@@ -43,6 +52,22 @@ def test_resolve_evidence_spans_pages():
     assert (ev.page_start, ev.page_end) == (1, 2)
 
 
+def test_evidence_expands_to_end_of_sentence():
+    ev = resolve_evidence(sentence_chunk(), [1])
+    assert ev.text == (
+        "Vous pouvez résilier l’Offre, à tout moment, par écrit, moyennant "
+        "un préavis de huit jours."
+    )
+    assert (ev.line_start, ev.line_end) == (1, 2)
+
+
+def test_evidence_expands_to_start_and_end_of_sentence():
+    ev = resolve_evidence(sentence_chunk(), [3])
+    assert ev.text.startswith("Nous pouvons résilier")
+    assert ev.text.endswith("L’Offre prend fin.")
+    assert ev.line_start == 2
+
+
 def test_value_number_formats():
     assert value_in_evidence(2.4, "Tenue de compte 2,40 €")
     assert not value_in_evidence(2.5, "Tenue de compte 2,40 €")
@@ -52,3 +77,9 @@ def test_value_number_formats():
 def test_value_string():
     assert value_in_evidence("Banque X", "Contrat avec la Banque X")
     assert not value_in_evidence("Banque Y", "Contrat avec la Banque X")
+
+
+def test_value_number_words_need_a_unit():
+    assert value_in_evidence("8", "moyennant un préavis de huit jours")
+    assert value_in_evidence(2, "avec un préavis de deux mois")
+    assert not value_in_evidence(1, "un contrat de compte")

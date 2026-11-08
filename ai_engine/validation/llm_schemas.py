@@ -13,7 +13,7 @@ class RawExtractedField(BaseModel):
     field_name: FieldName
     value: str | int | float
     unit: str | None = None
-    evidence_lines: list[int] = Field(min_length=1, max_length=8)
+    evidence_lines: list[int] = Field(min_length=1, max_length=5)
 
 
 class ExtractionOutput(BaseModel):
@@ -23,7 +23,7 @@ class ExtractionOutput(BaseModel):
 class RawRiskFinding(BaseModel):
     category: RiskCategory
     severity: Literal["low", "medium", "high"]
-    evidence_lines: list[int] = Field(min_length=1, max_length=8)
+    evidence_lines: list[int] = Field(min_length=1, max_length=3)
     explanation: str
     suggested_action: str
 
