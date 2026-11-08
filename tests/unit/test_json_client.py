@@ -56,20 +56,27 @@ def test_chat_json_raises_after_max_retries(monkeypatch):
     assert len(calls) == 3
 
 
+RISK_ITEM = {
+    "category": "termination_changes",
+    "evidence_lines": [1],
+    "impacts_customer": True,
+    "unclear_for_customer": False,
+    "bank_decides_alone": True,
+    "explanation": "x",
+    "suggested_action": "x",
+}
+
+
 def test_risk_schema_rejects_unknown_category():
-    bad = {
-        "findings": [
-            {
-                "category": "foo",
-                "severity": "low",
-                "evidence_lines": [1],
-                "explanation": "x",
-                "suggested_action": "x",
-            }
-        ]
-    }
     with pytest.raises(ValidationError):
-        RiskOutput.model_validate(bad)
+        RiskOutput.model_validate({"findings": [{**RISK_ITEM, "category": "foo"}]})
+
+
+def test_risk_schema_requires_criteria():
+    incomplete = {k: v for k, v in RISK_ITEM.items() if k != "bank_decides_alone"}
+    with pytest.raises(ValidationError):
+        RiskOutput.model_validate({"findings": [incomplete]})
+    assert RiskOutput.model_validate({"findings": [RISK_ITEM]}).findings[0].bank_decides_alone
 
 
 def test_extraction_schema_accepts_number_and_string():

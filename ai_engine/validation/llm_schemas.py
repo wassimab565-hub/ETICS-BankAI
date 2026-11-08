@@ -24,8 +24,10 @@ class ExtractionOutput(BaseModel):
 
 class RawRiskFinding(BaseModel):
     category: RiskCategory
-    severity: Literal["low", "medium", "high"]
     evidence_lines: list[int] = Field(min_length=1, max_length=3)
+    impacts_customer: bool
+    unclear_for_customer: bool
+    bank_decides_alone: bool
     explanation: str
     suggested_action: str
 
