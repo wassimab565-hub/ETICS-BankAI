@@ -136,3 +136,29 @@ def value_in_evidence(value: str | int | float, evidence: str) -> bool:
 def text_in_chunk(text: str, chunk: Chunk) -> bool:
     """Check that a label really appears in the chunk (labels must not be invented)."""
     return _norm(text) in _norm(chunk.text)
+
+_DURATION = re.compile(
+    r"\b(\d+|"
+    + "|".join(sorted(map(re.escape, _WORD_NUMBERS), key=len, reverse=True))
+    + rf")\s+({_UNITS})\b",
+    re.IGNORECASE,
+)
+_UNIT_NAMES = (
+    ("jour", "days"),
+    ("semaine", "weeks"),
+    ("mois", "months"),
+    ("an", "years"),
+    ("heure", "hours"),
+)
+
+
+def duration_in(text: str) -> tuple[float, str] | None:
+    """First duration in a text: 'huit jours' -> (8.0, 'days'), '2 mois' -> (2.0, 'months')."""
+    match = _DURATION.search(text)
+    if not match:
+        return None
+    word = match.group(1).lower()
+    number = float(word) if word.isdigit() else float(_WORD_NUMBERS[word])
+    unit_word = match.group(2).lower()
+    unit = next(name for prefix, name in _UNIT_NAMES if unit_word.startswith(prefix))
+    return number, unit

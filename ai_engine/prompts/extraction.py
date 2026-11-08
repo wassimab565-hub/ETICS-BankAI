@@ -1,4 +1,4 @@
-EXTRACTION_PROMPT_VERSION = "extraction_v6"
+EXTRACTION_PROMPT_VERSION = "extraction_v7"
 
 DOCUMENT_TYPES = [
     "credit_agreement",
@@ -19,16 +19,11 @@ EXTRACTION_FIELDS = {
     "issue_date": "Date the document was issued or published, as written",
     "effective_date": "Date the conditions take effect, as written",
     "expiry_date": "Date the contract or offer ends, as written",
-    "loan_amount": "Amount of a loan or credit. Only for credit contracts",
     "interest_rate": "Interest rate (TAEG, TEG, nominal rate). Unit: percent",
-    "duration_months": "Duration of a contract or loan, as written. Unit: months or years",
-    "installment_amount": "Amount of one loan repayment installment. Only for credit contracts. Never for transfers, direct debits, cards or cash withdrawals",
-    "repayment_frequency": "How often loan repayments are made (monthly, quarterly...)",
     "application_fee": "One-off fee to open, set up or process an account or a file",
     "account_fee": "Recurring fee to maintain an account, a card or a service (for example account maintenance)",
     "commission": "Other commission or charge for one operation or service (for example intervention, transfer or withdrawal fee)",
     "late_payment_penalty": "Late-payment charges or penalty interest",
-    "early_repayment_fee": "Fee for early repayment of a loan",
     "termination_notice_period": "Notice period to terminate the contract",
     "termination_conditions": "Conditions under which the contract can be terminated",
 }

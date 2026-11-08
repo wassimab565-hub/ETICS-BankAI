@@ -3,6 +3,7 @@ import pytest
 from ai_engine.chunking.chunker import chunk_pages
 from ai_engine.validation.evidence import (
     EvidenceError,
+    duration_in,
     resolve_evidence,
     text_in_chunk,
     value_in_evidence,
@@ -89,3 +90,9 @@ def test_text_in_chunk_ignores_line_breaks_and_case():
     chunk = make_chunk()
     assert text_in_chunk("tenue de compte actif", chunk)
     assert not text_in_chunk("Carte Visa Gold", chunk)
+
+def test_duration_in():
+    assert duration_in("un préavis de huit jours") == (8.0, "days")
+    assert duration_in("avec 2 mois de délai") == (2.0, "months")
+    assert duration_in("pour un an") == (1.0, "years")
+    assert duration_in("aucune durée ici") is None

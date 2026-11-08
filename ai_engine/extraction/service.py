@@ -22,6 +22,7 @@ from ai_engine.validation.evidence import (
     resolve_evidence,
 )
 from ai_engine.validation.llm_schemas import ExtractionOutput
+from ai_engine.extraction.rules import post_process
 from backend.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -95,4 +96,4 @@ def extract_document(
                 logger.info("chunk %s: %s item(s) dropped", index, len(dropped))
         if on_progress:
             on_progress(position, len(indexes))
-    return result
+    return post_process(result)
