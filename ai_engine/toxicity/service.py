@@ -15,6 +15,7 @@ from ai_engine.toxicity.schemas import RiskCriteria, RiskFinding, RiskResult
 from ai_engine.validation.evidence import RISK_MAX_LINES, EvidenceError, resolve_evidence
 from ai_engine.validation.llm_schemas import RiskOutput
 from backend.core.config import settings
+from ai_engine.toxicity.rules import post_process
 
 logger = logging.getLogger(__name__)
 
@@ -90,4 +91,4 @@ def analyze_document(
                 logger.info("risk chunk %s: %s item(s) dropped", index, len(dropped))
         if on_progress:
             on_progress(position, len(indexes))
-    return result
+    return post_process(result)

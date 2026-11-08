@@ -25,6 +25,7 @@ class RiskFinding(BaseModel):
     explanation: str
     suggested_action: str
     criteria: RiskCriteria
+    model_criteria: RiskCriteria | None = None  # model answers before the code adjustments
     severity: Severity | None = None  # computed by code (phase 6.3)
     source: FieldSource
     status: ValidationStatus = ValidationStatus.needs_review
