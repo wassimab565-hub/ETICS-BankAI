@@ -11,6 +11,7 @@ from ai_engine.validation.evidence import (
     RISK_MAX_LINES,
     EvidenceError,
     resolve_evidence,
+    text_in_chunk,
     value_in_evidence,
 )
 from ai_engine.validation.llm_schemas import ExtractionOutput, RiskOutput
@@ -46,6 +47,8 @@ for name, system, prompt, model, key, max_lines in tasks:
                 status = "value OK"
             else:
                 status = "VALUE NOT IN EVIDENCE"
+            if item.label and not text_in_chunk(item.label, chunk):
+                status += " | LABEL NOT IN TEXT"
         data["evidence"] = ev.text[:300]
         data["page"] = ev.page_start
         print(f"  {status}  {data}")

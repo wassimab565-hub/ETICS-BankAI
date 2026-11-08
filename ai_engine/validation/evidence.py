@@ -132,3 +132,7 @@ def value_in_evidence(value: str | int | float, evidence: str) -> bool:
     return bool(wanted) and all(
         any(abs(w - a) < 1e-9 for a in available) for w in wanted
     )
+
+def text_in_chunk(text: str, chunk: Chunk) -> bool:
+    """Check that a label really appears in the chunk (labels must not be invented)."""
+    return _norm(text) in _norm(chunk.text)

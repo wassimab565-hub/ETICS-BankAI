@@ -13,6 +13,7 @@ class RawExtractedField(BaseModel):
     field_name: FieldName
     value: str | int | float
     unit: str | None = None
+    label: str | None = None
     evidence_lines: list[int] = Field(min_length=1, max_length=5)
 
 

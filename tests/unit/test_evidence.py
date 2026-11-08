@@ -4,6 +4,7 @@ from ai_engine.chunking.chunker import chunk_pages
 from ai_engine.validation.evidence import (
     EvidenceError,
     resolve_evidence,
+    text_in_chunk,
     value_in_evidence,
 )
 from document_processing.parsers.base import PageText
@@ -83,3 +84,8 @@ def test_value_number_words_need_a_unit():
     assert value_in_evidence("8", "moyennant un préavis de huit jours")
     assert value_in_evidence(2, "avec un préavis de deux mois")
     assert not value_in_evidence(1, "un contrat de compte")
+
+def test_text_in_chunk_ignores_line_breaks_and_case():
+    chunk = make_chunk()
+    assert text_in_chunk("tenue de compte actif", chunk)
+    assert not text_in_chunk("Carte Visa Gold", chunk)
