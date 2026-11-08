@@ -11,7 +11,7 @@ from ai_engine.prompts.extraction import EXTRACTION_PROMPT_VERSION
 from ai_engine.prompts.risk_analysis import RISK_PROMPT_VERSION
 from ai_engine.toxicity.service import analyze_document
 from backend.core.config import BASE_DIR, settings
-from backend.models.analysis import AnalysisRun
+from backend.models.analysis import AnalysisRun, RunStatus
 from backend.models.document import Document, DocumentStatus
 from backend.services import analysis_repository as repo
 from backend.services import progress
@@ -19,6 +19,7 @@ from backend.services.page_repository import save_pages
 from database.connection import SessionLocal
 from document_processing.loader import parse_document
 from document_processing.preprocessing.text_cleaner import clean_pages
+from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
 
@@ -115,3 +116,20 @@ def _mark_failed(db: Session, document_id: int, run_id: int, reason: str) -> Non
     if doc is not None:
         doc.status = DocumentStatus.failed.value
         db.commit()
+
+def recover_interrupted(session_factory: Callable[[], Session] = SessionLocal) -> int:
+    """After a restart no analysis is really running: close the ones left open.
+
+    Returns the number of documents put back in the 'failed' state.
+    """
+    with session_factory() as db:
+        runs = db.scalars(select(AnalysisRun).where(AnalysisRun.status == RunStatus.running.value))
+        for run in list(runs):
+            repo.fail_run(db, run, "interrupted by a server restart")
+        documents = list(
+            db.scalars(select(Document).where(Document.status == DocumentStatus.processing.value))
+        )
+        for doc in documents:
+            doc.status = DocumentStatus.failed.value
+        db.commit()
+        return len(documents)

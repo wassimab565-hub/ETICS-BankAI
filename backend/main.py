@@ -6,19 +6,23 @@ import backend.models.analysis  # noqa: F401  (registers the tables)
 import backend.models.document  # noqa: F401
 import backend.models.document_page  # noqa: F401
 from ai_engine.llm.ollama_client import check_ollama
+from backend.api.analysis import router as analysis_router
 from backend.api.documents import router as documents_router
 from backend.core.config import settings
+from backend.services.pipeline import recover_interrupted
 from database.connection import Base, engine
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)  # temporary, replaced by Alembic in phase 7.2
+    Base.metadata.create_all(bind=engine)  # temporary, replaced by Alembic later
+    recover_interrupted()
     yield
 
 
 app = FastAPI(title=settings.app_name, lifespan=lifespan)
 app.include_router(documents_router)
+app.include_router(analysis_router)
 
 
 @app.get("/health")
