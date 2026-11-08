@@ -55,6 +55,12 @@ def _needs_review(run: AnalysisRun) -> bool:
         or any(field.status != "valid" for field in run.fields)
     )
 
+def _document_type(run: AnalysisRun) -> str | None:
+    """Document type found by the extraction, only when it passed the validation rules."""
+    for field in run.fields:
+        if field.field_name == "document_type" and field.status == "valid":
+            return field.raw_value.strip().lower()
+    return None
 
 def _process(db: Session, document_id: int) -> int | None:
     doc = db.get(Document, document_id)
@@ -95,6 +101,8 @@ def _process(db: Session, document_id: int) -> int | None:
         repo.save_risk(db, run, risk)
 
         repo.finish_run(db, run)
+        doc.review_priority = run.review_priority
+        doc.document_type = _document_type(run)
         doc.status = (
             DocumentStatus.needs_review.value if _needs_review(run) else DocumentStatus.processed.value
         )

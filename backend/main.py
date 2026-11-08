@@ -11,7 +11,7 @@ from backend.api.documents import router as documents_router
 from backend.core.config import settings
 from backend.services.pipeline import recover_interrupted
 from database.connection import Base, engine
-
+from backend.api.stats import router as stats_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title=settings.app_name, lifespan=lifespan)
 app.include_router(documents_router)
 app.include_router(analysis_router)
-
+app.include_router(stats_router)
 
 @app.get("/health")
 def health():

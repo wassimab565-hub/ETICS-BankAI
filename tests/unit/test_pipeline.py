@@ -212,3 +212,21 @@ def test_partial_failure_is_flagged(factory, doc_id, monkeypatch):
         assert run.status == "completed_with_errors"
         assert run.extraction_failed_chunks == [1]
         assert db.get(Document, doc_id).status == "needs_review"
+
+def test_document_summary_is_filled_from_the_run(factory, doc_id, monkeypatch):
+    type_field = ExtractedField(
+        field_name="document_type",
+        raw_value="Fee_Schedule",
+        source=source(),
+        status=ValidationStatus.valid,
+    )
+    extraction = extraction_ok()
+    extraction.fields.append(type_field)
+    patch_models(monkeypatch, extraction, risk_result(True))
+
+    pipeline.run_pipeline(doc_id, factory)
+
+    with factory() as db:
+        doc = db.get(Document, doc_id)
+        assert doc.document_type == "fee_schedule"
+        assert doc.review_priority == "medium"

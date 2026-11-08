@@ -26,9 +26,23 @@ async def upload_document(file: UploadFile = File(...), db: Session = Depends(ge
 
 
 @router.get("", response_model=list[DocumentOut])
-def list_documents(db: Session = Depends(get_db)):
-    return db.scalars(select(Document).order_by(Document.uploaded_at.desc())).all()
-
+def list_documents(
+    status: str | None = None,
+    review_priority: str | None = None,
+    document_type: str | None = None,
+    q: str | None = None,
+    db: Session = Depends(get_db),
+):
+    query = select(Document)
+    if status:
+        query = query.where(Document.status == status)
+    if review_priority:
+        query = query.where(Document.review_priority == review_priority)
+    if document_type:
+        query = query.where(Document.document_type == document_type)
+    if q:
+        query = query.where(Document.filename.icontains(q, autoescape=True))
+    return db.scalars(query.order_by(Document.uploaded_at.desc())).all()
 
 @router.get("/{document_id}", response_model=DocumentOut)
 def get_document(document_id: int, db: Session = Depends(get_db)):
