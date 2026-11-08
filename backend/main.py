@@ -2,7 +2,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-import backend.models.document  # noqa: F401  (registers the table)
+import backend.models.analysis  # noqa: F401  (registers the tables)
+import backend.models.document  # noqa: F401
+import backend.models.document_page  # noqa: F401
 from ai_engine.llm.ollama_client import check_ollama
 from backend.api.documents import router as documents_router
 from backend.core.config import settings
