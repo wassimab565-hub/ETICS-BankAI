@@ -151,7 +151,7 @@ def apply_rules(field: ExtractedField) -> ExtractedField:
         rejected = True
 
     hint = FIELD_HINTS.get(field.field_name)
-    if hint and not hint.search(f"{evidence} {field.label or ''}"):
+    if hint and not hint.search(f"{evidence} {field.source.context} {field.label or ''}"):
         issues.append("evidence does not mention the expected topic")
 
     if rejected:

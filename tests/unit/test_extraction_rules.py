@@ -7,7 +7,7 @@ from ai_engine.extraction.schemas import (
 )
 
 
-def make_field(name, raw, evidence, label=None):
+def make_field(name, raw, evidence, label=None, context=""):
     source = FieldSource(
         chunk_index=0,
         page_start=1,
@@ -15,6 +15,7 @@ def make_field(name, raw, evidence, label=None):
         line_start=1,
         line_end=2,
         evidence=evidence,
+        context=context,
     )
     return ExtractedField(field_name=name, raw_value=raw, label=label, source=source)
 
@@ -126,3 +127,9 @@ def test_parse_number():
     assert parse_number("1 000,50 €") == 1000.5
     assert parse_number("2.4") == 2.4
     assert parse_number("abc") is None
+
+def test_context_lines_count_for_the_topic_check():
+    field = apply_rules(
+        make_field("account_fee", "2,40", "Actif Par mois 2,40 €", context="Tenue de compte")
+    )
+    assert field.status == ValidationStatus.valid

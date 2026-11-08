@@ -93,3 +93,13 @@ def test_select_chunks_keeps_first_and_keyword_chunks():
 
 def test_select_chunks_empty():
     assert select_chunks([]) == []
+
+def test_context_holds_preceding_lines(monkeypatch):
+    text = "Tenue de compte\nActif Par mois 2,40 €"
+    chunk = chunk_pages([page(1, text)])[0]
+    monkeypatch.setattr(service, "chat_json", lambda *a, **k: (fake_output([2]), {}))
+
+    fields, _ = service.extract_from_chunk(chunk)
+
+    assert fields[0].source.evidence == "Actif Par mois 2,40 €"
+    assert fields[0].source.context == "Tenue de compte"

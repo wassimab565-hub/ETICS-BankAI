@@ -48,6 +48,7 @@ class FieldSource(BaseModel):
     line_start: int
     line_end: int
     evidence: str
+    context: str = ""  # up to 3 lines before the evidence (labels of table rows)
 
 
 class ExtractedField(BaseModel):

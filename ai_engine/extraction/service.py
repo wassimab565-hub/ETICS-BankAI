@@ -28,15 +28,19 @@ from backend.core.config import settings
 logger = logging.getLogger(__name__)
 
 
+CONTEXT_LINES = 3
+
+
 def extract_from_chunk(chunk: Chunk) -> tuple[list[ExtractedField], list[dict]]:
     """Run the model on one chunk. Returns (fields, dropped items with the reason).
 
     An item whose line numbers cannot be used is dropped: without a verbatim
-    evidence, it cannot be kept. Values are validated later (phase 5.4).
+    evidence, it cannot be kept. Values are validated later (rules.py).
     """
     prompt = build_extraction_prompt(chunk.numbered_text)
     parsed, _meta = chat_json(prompt, ExtractionOutput, system=EXTRACTION_SYSTEM)
 
+    lines = chunk.lines
     fields: list[ExtractedField] = []
     dropped: list[dict] = []
     for raw in parsed.fields:
@@ -45,6 +49,11 @@ def extract_from_chunk(chunk: Chunk) -> tuple[list[ExtractedField], list[dict]]:
         except EvidenceError as exc:
             dropped.append({"field_name": raw.field_name, "reason": str(exc)})
             continue
+        context = " ".join(
+            line.text
+            for line in lines
+            if ev.line_start - CONTEXT_LINES <= line.number < ev.line_start
+        )
         fields.append(
             ExtractedField(
                 field_name=raw.field_name,
@@ -58,6 +67,7 @@ def extract_from_chunk(chunk: Chunk) -> tuple[list[ExtractedField], list[dict]]:
                     line_start=ev.line_start,
                     line_end=ev.line_end,
                     evidence=ev.text,
+                    context=context,
                 ),
                 status=ValidationStatus.needs_review,
             )
