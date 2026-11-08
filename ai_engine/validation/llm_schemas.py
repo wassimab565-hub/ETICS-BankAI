@@ -18,7 +18,8 @@ class RawExtractedField(BaseModel):
 
 
 class ExtractionOutput(BaseModel):
-    fields: list[RawExtractedField]
+    # maxItems is only a hint for the model's output format, not a validation rule
+    fields: list[RawExtractedField] = Field(json_schema_extra={"maxItems": 30})
 
 
 class RawRiskFinding(BaseModel):
@@ -30,4 +31,4 @@ class RawRiskFinding(BaseModel):
 
 
 class RiskOutput(BaseModel):
-    findings: list[RawRiskFinding]
+    findings: list[RawRiskFinding] = Field(json_schema_extra={"maxItems": 3})

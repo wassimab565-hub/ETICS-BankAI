@@ -91,3 +91,7 @@ def test_extraction_schema_requires_value_and_lines():
         ExtractionOutput.model_validate(no_value)
     with pytest.raises(ValidationError):
         ExtractionOutput.model_validate(no_lines)
+
+def test_output_schemas_limit_items_for_the_model():
+    assert ExtractionOutput.model_json_schema()["properties"]["fields"]["maxItems"] == 30
+    assert RiskOutput.model_json_schema()["properties"]["findings"]["maxItems"] == 3
