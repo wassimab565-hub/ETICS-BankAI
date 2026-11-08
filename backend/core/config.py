@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     ollama_model: str = "qwen3:8b"
     ollama_num_ctx: int = 8192
     ollama_timeout: int = 300
+    ollama_max_tokens: int = 3000
 
     data_dir: str = "data"
     max_upload_mb: int = 20

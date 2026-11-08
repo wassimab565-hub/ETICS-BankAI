@@ -56,6 +56,7 @@ def chat(
         "options": {
             "temperature": temperature,
             "num_ctx": num_ctx or settings.ollama_num_ctx,
+            "num_predict": settings.ollama_max_tokens,
         },
     }
     if json_format is not None:

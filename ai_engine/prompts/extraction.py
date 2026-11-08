@@ -1,4 +1,4 @@
-EXTRACTION_PROMPT_VERSION = "extraction_v4"
+EXTRACTION_PROMPT_VERSION = "extraction_v5"
 
 DOCUMENT_TYPES = [
     "credit_agreement",
@@ -31,8 +31,6 @@ EXTRACTION_FIELDS = {
     "early_repayment_fee": "Fee for early repayment of a loan",
     "termination_notice_period": "Notice period to terminate the contract",
     "termination_conditions": "Conditions under which the contract can be terminated",
-    "customer_obligations": "Main obligations of the customer",
-    "bank_obligations": "Main obligations of the bank",
 }
 
 EXTRACTION_SYSTEM = """You are a precise information extraction engine for banking documents and contracts. Documents are mostly in French, sometimes in English.
