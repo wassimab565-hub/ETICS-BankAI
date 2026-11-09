@@ -181,3 +181,22 @@ def split_findings(findings: list[dict], show_low: bool) -> tuple[list[dict], in
     """(findings to show, number of low-severity findings hidden)."""
     visible = [f for f in findings if show_low or f.get("severity") != "low"]
     return visible, len(findings) - len(visible)
+
+def validate_review(reviewer_name: str, decision: str | None) -> str | None:
+    """Error message (French) when a review cannot be sent, None when it is valid."""
+    if not (reviewer_name or "").strip():
+        return "Indiquez votre nom avant d'enregistrer une revue."
+    if decision not in DECISION_LABELS:
+        return "Choisissez une décision."
+    return None
+
+
+def clean_optional(text: str | None) -> str | None:
+    """Stripped text, or None when empty."""
+    cleaned = (text or "").strip()
+    return cleaned or None
+
+
+def review_progress(items: list[dict]) -> tuple[int, int]:
+    """(items with at least one human review, total items)."""
+    return sum(1 for item in items if item.get("reviews")), len(items)

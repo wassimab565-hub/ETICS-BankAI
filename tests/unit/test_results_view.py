@@ -2,6 +2,7 @@ from datetime import timezone
 
 from frontend.components.results_view import (
     analysis_summary,
+    clean_optional,
     corrected_value,
     criteria_labels,
     escape_markdown,
@@ -10,9 +11,11 @@ from frontend.components.results_view import (
     latest_review,
     order_fields,
     page_text,
+    review_progress,
     review_summary,
     severity_label,
     split_findings,
+    validate_review,
 )
 
 
@@ -150,3 +153,21 @@ def test_split_findings():
     assert [f["severity"] for f in visible] == ["high", None] and hidden == 1
     visible, hidden = split_findings(findings, show_low=True)
     assert len(visible) == 3 and hidden == 0
+
+def test_validate_review():
+    assert "nom" in validate_review("  ", "confirmed")
+    assert "décision" in validate_review("Wassim", None)
+    assert "décision" in validate_review("Wassim", "maybe")
+    assert validate_review(" Wassim ", "confirmed") is None
+
+
+def test_clean_optional():
+    assert clean_optional("  note ") == "note"
+    assert clean_optional("   ") is None
+    assert clean_optional(None) is None
+
+
+def test_review_progress():
+    items = [{"reviews": [{"id": 1}]}, {"reviews": []}, {}]
+    assert review_progress(items) == (1, 3)
+    assert review_progress([]) == (0, 0)

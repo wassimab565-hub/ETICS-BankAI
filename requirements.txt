@@ -14,3 +14,4 @@ openpyxl
 pytesseract
 pillow
 streamlit
+plotly
