@@ -1,0 +1,365 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1563" viewBox="0 0 1600 1563" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" role="img" aria-labelledby="t d" xmlns:c2pa="http://c2pa.org/manifest"><title id="t">ETICS-BankAI: pipeline, architecture and tools</title><desc id="d">Six-step pipeline (upload, processing, AI analysis, validation, storage, review and dashboard), system architecture (users, Streamlit frontend, FastAPI backend, local AI tools, PostgreSQL), V1 status, tech stack and next steps.</desc><defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0f2747"/><stop offset="1" stop-color="#1e40af"/></linearGradient><filter id="sh" x="-4%" y="-4%" width="108%" height="112%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.10"/></filter></defs><rect width="1600" height="1563" fill="#f8fafc"/><rect x="36" y="28" width="1528" height="112" rx="18" fill="url(#hg)"/>
+<g transform="translate(70,58)" fill="#ffffff"><polygon points="28,0 56,14 0,14"/><rect x="6" y="18" width="8" height="24"/><rect x="18" y="18" width="8" height="24"/><rect x="30" y="18" width="8" height="24"/><rect x="42" y="18" width="8" height="24"/><rect x="0" y="46" width="56" height="6"/></g>
+<text x="150.0" y="84.0" font-size="42" fill="#ffffff" text-anchor="start" font-weight="700">ETICS-BankAI</text>
+<text x="152.0" y="118.0" font-size="22" fill="#93c5fd" text-anchor="start">Banking Document Intelligence</text>
+<rect x="1437.9" y="50" width="96.1" height="30" rx="15" fill="#16a34a"/>
+<text x="1486.0" y="70.0" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="700">V1 · MVP</text>
+<rect x="1314.8" y="90" width="219.2" height="30" rx="15" fill="#ffffff" fill-opacity="0.14" stroke="#ffffff" stroke-opacity="0.45"/>
+<text x="1424.4" y="110.0" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="700">Local-first · Human review</text>
+<rect x="36" y="171" width="5" height="26" rx="2.5" fill="#2563eb"/>
+<text x="52.0" y="190.0" font-size="22" fill="#0f2747" text-anchor="start" font-weight="700">Processing pipeline</text>
+<text x="290.4" y="190.0" font-size="14" fill="#64748b" text-anchor="start">From an uploaded file to reviewed, traceable results</text>
+<clipPath id="cp1"><rect x="36.0" y="212.0" width="229.7" height="342.0" rx="14"/></clipPath>
+<rect x="36.0" y="212.0" width="229.7" height="342.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="36.0" y="212.0" width="229.7" height="6" fill="#2563eb" clip-path="url(#cp1)"/>
+<circle cx="69.0" cy="254" r="15" fill="#2563eb"/>
+<text x="69.0" y="260.0" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="700">1</text>
+<g transform="translate(211.7,236.0) scale(1.0)" fill="none" stroke="#2563eb" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h14l8 8v22a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M22 4v8h8"/><path d="M18 30V19M13 23.5l5-5 5 5"/></g>
+<text x="54.0" y="304.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Document Upload</text>
+<text x="54.0" y="351.0" font-size="13" fill="#475569" text-anchor="start">Banking documents are</text>
+<text x="54.0" y="368.0" font-size="13" fill="#475569" text-anchor="start">received and checked.</text>
+<path d="M54.0 383.0 H247.7" stroke="#e2e8f0" stroke-width="1.2"/>
+<circle cx="62.0" cy="405.5" r="7.5" fill="#2563eb"/>
+<path d="M58.4 405.7 L61.0 408.3 L65.8 402.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="410.0" font-size="13" fill="#1e293b" text-anchor="start">PDF, DOCX and XLSX (20</text>
+<text x="76.0" y="427.0" font-size="13" fill="#1e293b" text-anchor="start">MB max)</text>
+<circle cx="62.0" cy="447.5" r="7.5" fill="#2563eb"/>
+<path d="M58.4 447.7 L61.0 450.3 L65.8 444.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="452.0" font-size="13" fill="#1e293b" text-anchor="start">Extension, size and</text>
+<text x="76.0" y="469.0" font-size="13" fill="#1e293b" text-anchor="start">file-signature checks</text>
+<circle cx="62.0" cy="489.5" r="7.5" fill="#2563eb"/>
+<path d="M58.4 489.7 L61.0 492.3 L65.8 486.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="494.0" font-size="13" fill="#1e293b" text-anchor="start">SHA-256 hash: a file is</text>
+<text x="76.0" y="511.0" font-size="13" fill="#1e293b" text-anchor="start">never stored twice</text>
+<path d="M276.7 246 L284.7 254 L276.7 262" fill="none" stroke="#94a3b8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<clipPath id="cp2"><rect x="295.7" y="212.0" width="229.7" height="342.0" rx="14"/></clipPath>
+<rect x="295.7" y="212.0" width="229.7" height="342.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="295.7" y="212.0" width="229.7" height="6" fill="#0d9488" clip-path="url(#cp2)"/>
+<circle cx="328.7" cy="254" r="15" fill="#0d9488"/>
+<text x="328.7" y="260.0" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="700">2</text>
+<g transform="translate(471.3,236.0) scale(1.0)" fill="none" stroke="#0d9488" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="15" cy="15" r="10"/><path d="M22.5 22.5L32 32"/><path d="M10.5 11h9M10.5 15h9M10.5 19h5"/></g>
+<text x="313.7" y="304.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Document</text>
+<text x="313.7" y="326.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Processing</text>
+<text x="313.7" y="351.0" font-size="13" fill="#475569" text-anchor="start">Text is extracted and prepared</text>
+<text x="313.7" y="368.0" font-size="13" fill="#475569" text-anchor="start">for analysis.</text>
+<path d="M313.7 383.0 H507.3" stroke="#e2e8f0" stroke-width="1.2"/>
+<circle cx="321.7" cy="405.5" r="7.5" fill="#0d9488"/>
+<path d="M318.1 405.7 L320.7 408.3 L325.5 402.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="335.7" y="410.0" font-size="13" fill="#1e293b" text-anchor="start">PDF parsing, tables rebuilt</text>
+<text x="335.7" y="427.0" font-size="13" fill="#1e293b" text-anchor="start">row by row</text>
+<circle cx="321.7" cy="447.5" r="7.5" fill="#0d9488"/>
+<path d="M318.1 447.7 L320.7 450.3 L325.5 444.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="335.7" y="452.0" font-size="13" fill="#1e293b" text-anchor="start">OCR (Tesseract, French +</text>
+<text x="335.7" y="469.0" font-size="13" fill="#1e293b" text-anchor="start">English) for scanned pages</text>
+<circle cx="321.7" cy="489.5" r="7.5" fill="#0d9488"/>
+<path d="M318.1 489.7 L320.7 492.3 L325.5 486.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="335.7" y="494.0" font-size="13" fill="#1e293b" text-anchor="start">Cleaning and page-aware</text>
+<text x="335.7" y="511.0" font-size="13" fill="#1e293b" text-anchor="start">chunking</text>
+<path d="M536.3 246 L544.3 254 L536.3 262" fill="none" stroke="#94a3b8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<clipPath id="cp3"><rect x="555.3" y="212.0" width="229.7" height="342.0" rx="14"/></clipPath>
+<rect x="555.3" y="212.0" width="229.7" height="342.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="555.3" y="212.0" width="229.7" height="6" fill="#7c3aed" clip-path="url(#cp3)"/>
+<circle cx="588.3" cy="254" r="15" fill="#7c3aed"/>
+<text x="588.3" y="260.0" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="700">3</text>
+<g transform="translate(731.0,236.0) scale(1.0)" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="18" height="18" rx="3"/><rect x="14.5" y="14.5" width="7" height="7" rx="1"/><path d="M14 3v6M18 3v6M22 3v6M14 27v6M18 27v6M22 27v6M3 14h6M3 18h6M3 22h6M27 14h6M27 18h6M27 22h6"/></g>
+<text x="573.3" y="304.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">AI Analysis</text>
+<text x="573.3" y="351.0" font-size="13" fill="#475569" text-anchor="start">Qwen3:8B runs locally through</text>
+<text x="573.3" y="368.0" font-size="13" fill="#475569" text-anchor="start">Ollama.</text>
+<path d="M573.3 383.0 H767.0" stroke="#e2e8f0" stroke-width="1.2"/>
+<circle cx="581.3" cy="405.5" r="7.5" fill="#7c3aed"/>
+<path d="M577.7 405.7 L580.3 408.3 L585.1 402.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="595.3" y="410.0" font-size="13" fill="#1e293b" text-anchor="start">Structured extraction (14</text>
+<text x="595.3" y="427.0" font-size="13" fill="#1e293b" text-anchor="start">fields)</text>
+<circle cx="581.3" cy="447.5" r="7.5" fill="#7c3aed"/>
+<path d="M577.7 447.7 L580.3 450.3 L585.1 444.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="595.3" y="452.0" font-size="13" fill="#1e293b" text-anchor="start">Ethical risk detection (8</text>
+<text x="595.3" y="469.0" font-size="13" fill="#1e293b" text-anchor="start">categories)</text>
+<circle cx="581.3" cy="489.5" r="7.5" fill="#7c3aed"/>
+<path d="M577.7 489.7 L580.3 492.3 L585.1 486.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="595.3" y="494.0" font-size="13" fill="#1e293b" text-anchor="start">The model returns line</text>
+<text x="595.3" y="511.0" font-size="13" fill="#1e293b" text-anchor="start">numbers, not quotes</text>
+<path d="M796.0 246 L804.0 254 L796.0 262" fill="none" stroke="#94a3b8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<clipPath id="cp4"><rect x="815.0" y="212.0" width="229.7" height="342.0" rx="14"/></clipPath>
+<rect x="815.0" y="212.0" width="229.7" height="342.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="815.0" y="212.0" width="229.7" height="6" fill="#16a34a" clip-path="url(#cp4)"/>
+<circle cx="848.0" cy="254" r="15" fill="#16a34a"/>
+<text x="848.0" y="260.0" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="700">4</text>
+<g transform="translate(990.7,236.0) scale(1.0)" fill="none" stroke="#16a34a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3L31 8v9c0 8.5-5.5 14.5-13 17C10.5 31.500 5 25.500 5 17V8z"/><path d="M12 18l4.500 4.500L25 14"/></g>
+<text x="833.0" y="304.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Validation</text>
+<text x="833.0" y="351.0" font-size="13" fill="#475569" text-anchor="start">Results are checked before</text>
+<text x="833.0" y="368.0" font-size="13" fill="#475569" text-anchor="start">anything is stored.</text>
+<path d="M833.0 383.0 H1026.7" stroke="#e2e8f0" stroke-width="1.2"/>
+<circle cx="841.0" cy="405.5" r="7.5" fill="#16a34a"/>
+<path d="M837.4 405.7 L840.0 408.3 L844.8 402.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="855.0" y="410.0" font-size="13" fill="#1e293b" text-anchor="start">Verbatim evidence and</text>
+<text x="855.0" y="427.0" font-size="13" fill="#1e293b" text-anchor="start">page rebuilt by code</text>
+<circle cx="841.0" cy="447.5" r="7.5" fill="#16a34a"/>
+<path d="M837.4 447.7 L840.0 450.3 L844.8 444.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="855.0" y="452.0" font-size="13" fill="#1e293b" text-anchor="start">Rules: value in evidence,</text>
+<text x="855.0" y="469.0" font-size="13" fill="#1e293b" text-anchor="start">format, topic</text>
+<circle cx="841.0" cy="489.5" r="7.5" fill="#16a34a"/>
+<path d="M837.4 489.7 L840.0 492.3 L844.8 486.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="855.0" y="494.0" font-size="13" fill="#1e293b" text-anchor="start">Severity computed by code</text>
+<path d="M1055.7 246 L1063.7 254 L1055.7 262" fill="none" stroke="#94a3b8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<clipPath id="cp5"><rect x="1074.7" y="212.0" width="229.7" height="342.0" rx="14"/></clipPath>
+<rect x="1074.7" y="212.0" width="229.7" height="342.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="1074.7" y="212.0" width="229.7" height="6" fill="#d97706" clip-path="url(#cp5)"/>
+<circle cx="1107.7" cy="254" r="15" fill="#d97706"/>
+<text x="1107.7" y="260.0" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="700">5</text>
+<g transform="translate(1250.3,236.0) scale(1.0)" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="18" cy="9" rx="12" ry="5"/><path d="M6 9v18c0 2.800 5.400 5 12 5s12-2.200 12-5V9"/><path d="M6 18c0 2.800 5.400 5 12 5s12-2.200 12-5"/></g>
+<text x="1092.7" y="304.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Database Storage</text>
+<text x="1092.7" y="351.0" font-size="13" fill="#475569" text-anchor="start">Only validated results are</text>
+<text x="1092.7" y="368.0" font-size="13" fill="#475569" text-anchor="start">persisted.</text>
+<path d="M1092.7 383.0 H1286.3" stroke="#e2e8f0" stroke-width="1.2"/>
+<circle cx="1100.7" cy="405.5" r="7.5" fill="#d97706"/>
+<path d="M1097.1 405.7 L1099.7 408.3 L1104.5 402.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1114.7" y="410.0" font-size="13" fill="#1e293b" text-anchor="start">PostgreSQL: documents,</text>
+<text x="1114.7" y="427.0" font-size="13" fill="#1e293b" text-anchor="start">pages, runs</text>
+<circle cx="1100.7" cy="447.5" r="7.5" fill="#d97706"/>
+<path d="M1097.1 447.7 L1099.7 450.3 L1104.5 444.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1114.7" y="452.0" font-size="13" fill="#1e293b" text-anchor="start">Fields, findings and human</text>
+<text x="1114.7" y="469.0" font-size="13" fill="#1e293b" text-anchor="start">reviews</text>
+<circle cx="1100.7" cy="489.5" r="7.5" fill="#d97706"/>
+<path d="M1097.1 489.7 L1099.7 492.3 L1104.5 486.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1114.7" y="494.0" font-size="13" fill="#1e293b" text-anchor="start">Every result traceable to its</text>
+<text x="1114.7" y="511.0" font-size="13" fill="#1e293b" text-anchor="start">page</text>
+<path d="M1315.3 246 L1323.3 254 L1315.3 262" fill="none" stroke="#94a3b8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<clipPath id="cp6"><rect x="1334.3" y="212.0" width="229.7" height="342.0" rx="14"/></clipPath>
+<rect x="1334.3" y="212.0" width="229.7" height="342.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="1334.3" y="212.0" width="229.7" height="6" fill="#0891b2" clip-path="url(#cp6)"/>
+<circle cx="1367.3" cy="254" r="15" fill="#0891b2"/>
+<text x="1367.3" y="260.0" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="700">6</text>
+<g transform="translate(1510.0,236.0) scale(1.0)" fill="none" stroke="#0891b2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="30" height="28" rx="3"/><path d="M10 26v-6M16 26V14M22 26v-8M28 26V12"/></g>
+<text x="1352.3" y="304.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Review &amp; Dashboard</text>
+<text x="1352.3" y="351.0" font-size="13" fill="#475569" text-anchor="start">People keep the final word on</text>
+<text x="1352.3" y="368.0" font-size="13" fill="#475569" text-anchor="start">every result.</text>
+<path d="M1352.3 383.0 H1546.0" stroke="#e2e8f0" stroke-width="1.2"/>
+<circle cx="1360.3" cy="405.5" r="7.5" fill="#0891b2"/>
+<path d="M1356.7 405.7 L1359.3 408.3 L1364.1 402.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1374.3" y="410.0" font-size="13" fill="#1e293b" text-anchor="start">Results with the original</text>
+<text x="1374.3" y="427.0" font-size="13" fill="#1e293b" text-anchor="start">passage</text>
+<circle cx="1360.3" cy="447.5" r="7.5" fill="#0891b2"/>
+<path d="M1356.7 447.7 L1359.3 450.3 L1364.1 444.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1374.3" y="452.0" font-size="13" fill="#1e293b" text-anchor="start">Human review and</text>
+<text x="1374.3" y="469.0" font-size="13" fill="#1e293b" text-anchor="start">corrections</text>
+<circle cx="1360.3" cy="489.5" r="7.5" fill="#0891b2"/>
+<path d="M1356.7 489.7 L1359.3 492.3 L1364.1 486.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1374.3" y="494.0" font-size="13" fill="#1e293b" text-anchor="start">Dashboard with charts</text>
+<circle cx="1360.3" cy="514.5" r="7.5" fill="none" stroke="#64748b" stroke-width="1.6"/>
+<path d="M1360.3 510.5 V514.5 L1363.3 516.5" fill="none" stroke="#64748b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1374.3" y="519.0" font-size="13" fill="#64748b" text-anchor="start" font-style="italic">Export of results, JSON /</text>
+<text x="1374.3" y="536.0" font-size="13" fill="#64748b" text-anchor="start" font-style="italic">CSV (planned)</text>
+<rect x="36" y="583" width="5" height="26" rx="2.5" fill="#2563eb"/>
+<text x="52.0" y="602.0" font-size="22" fill="#0f2747" text-anchor="start" font-weight="700">System architecture</text>
+<text x="293.0" y="602.0" font-size="14" fill="#64748b" text-anchor="start">Local-first: documents, results and the model stay on the machine</text>
+<clipPath id="cp7"><rect x="36.0" y="624.0" width="270.4" height="361.0" rx="14"/></clipPath>
+<rect x="36.0" y="624.0" width="270.4" height="361.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="36.0" y="624.0" width="270.4" height="6" fill="#2563eb" clip-path="url(#cp7)"/>
+<g transform="translate(54.0,648.0) scale(1.0)" fill="none" stroke="#2563eb" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="12" r="5"/><path d="M3 31c0-6 4.500-10 10-10s10 4 10 10"/><circle cx="26" cy="13" r="4"/><path d="M26 22c4.500 0 7.500 3.500 7.500 9"/></g>
+<text x="102.0" y="673.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Users</text>
+<text x="54.0" y="704.0" font-size="13" fill="#475569" text-anchor="start">Bank analysts, compliance and</text>
+<text x="54.0" y="721.0" font-size="13" fill="#475569" text-anchor="start">research reviewers</text>
+<path d="M54.0 735.0 H288.4" stroke="#e2e8f0" stroke-width="1.2"/>
+<circle cx="62.0" cy="757.5" r="7.5" fill="#2563eb"/>
+<path d="M58.4 757.7 L61.0 760.3 L65.8 754.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="762.0" font-size="13" fill="#1e293b" text-anchor="start">Upload documents</text>
+<circle cx="62.0" cy="782.5" r="7.5" fill="#2563eb"/>
+<path d="M58.4 782.7 L61.0 785.3 L65.8 779.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="787.0" font-size="13" fill="#1e293b" text-anchor="start">Check flagged clauses against the</text>
+<text x="76.0" y="804.0" font-size="13" fill="#1e293b" text-anchor="start">original passage</text>
+<circle cx="62.0" cy="824.5" r="7.5" fill="#2563eb"/>
+<path d="M58.4 824.7 L61.0 827.3 L65.8 821.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="829.0" font-size="13" fill="#1e293b" text-anchor="start">Record review decisions</text>
+<circle cx="62.0" cy="849.5" r="7.5" fill="#2563eb"/>
+<path d="M58.4 849.7 L61.0 852.3 L65.8 846.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="854.0" font-size="13" fill="#1e293b" text-anchor="start">Consult the dashboard</text>
+<text x="54.0" y="894.0" font-size="12" fill="#64748b" text-anchor="start" font-style="italic">V1: reviewer name only, no accounts.</text>
+<path d="M314.4 666 H342.4" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M321.4 660 L314.4 666 L321.4 672" fill="none" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M335.4 660 L342.4 666 L335.4 672" fill="none" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<clipPath id="cp8"><rect x="350.4" y="624.0" width="270.4" height="361.0" rx="14"/></clipPath>
+<rect x="350.4" y="624.0" width="270.4" height="361.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="350.4" y="624.0" width="270.4" height="6" fill="#0891b2" clip-path="url(#cp8)"/>
+<g transform="translate(368.4,648.0) scale(1.0)" fill="none" stroke="#0891b2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="30" height="26" rx="3"/><path d="M3 12h30"/><path d="M8 8.500h.01M12 8.500h.01"/><path d="M9 18h10M9 24h18"/></g>
+<text x="416.4" y="673.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Frontend</text>
+<text x="368.4" y="704.0" font-size="13" fill="#475569" text-anchor="start">Streamlit + Plotly (French interface)</text>
+<path d="M368.4 735.0 H602.8" stroke="#e2e8f0" stroke-width="1.2"/>
+<circle cx="376.4" cy="757.5" r="7.5" fill="#0891b2"/>
+<path d="M372.8 757.7 L375.4 760.3 L380.2 754.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="390.4" y="762.0" font-size="13" fill="#1e293b" text-anchor="start">Upload with live progress</text>
+<circle cx="376.4" cy="782.5" r="7.5" fill="#0891b2"/>
+<path d="M372.8 782.7 L375.4 785.3 L380.2 779.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="390.4" y="787.0" font-size="13" fill="#1e293b" text-anchor="start">Documents list and filters</text>
+<circle cx="376.4" cy="807.5" r="7.5" fill="#0891b2"/>
+<path d="M372.8 807.7 L375.4 810.3 L380.2 804.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="390.4" y="812.0" font-size="13" fill="#1e293b" text-anchor="start">Results with verbatim evidence</text>
+<circle cx="376.4" cy="832.5" r="7.5" fill="#0891b2"/>
+<path d="M372.8 832.7 L375.4 835.3 L380.2 829.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="390.4" y="837.0" font-size="13" fill="#1e293b" text-anchor="start">Human review forms</text>
+<circle cx="376.4" cy="857.5" r="7.5" fill="#0891b2"/>
+<path d="M372.8 857.7 L375.4 860.3 L380.2 854.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="390.4" y="862.0" font-size="13" fill="#1e293b" text-anchor="start">Dashboard and charts</text>
+<path d="M628.8 666 H656.8" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M635.8 660 L628.8 666 L635.8 672" fill="none" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M649.8 660 L656.8 666 L649.8 672" fill="none" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<clipPath id="cp9"><rect x="664.8" y="624.0" width="270.4" height="361.0" rx="14"/></clipPath>
+<rect x="664.8" y="624.0" width="270.4" height="361.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="664.8" y="624.0" width="270.4" height="6" fill="#16a34a" clip-path="url(#cp9)"/>
+<g transform="translate(682.8,648.0) scale(1.0)" fill="none" stroke="#16a34a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="28" height="10" rx="2.500"/><rect x="4" y="21" width="28" height="10" rx="2.500"/><path d="M9 10h.01M9 26h.01M16 10h12M16 26h12"/></g>
+<text x="730.8" y="673.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Backend API</text>
+<text x="682.8" y="704.0" font-size="13" fill="#475569" text-anchor="start">FastAPI</text>
+<path d="M682.8 735.0 H917.2" stroke="#e2e8f0" stroke-width="1.2"/>
+<rect x="682.8" y="749.0" width="234.4" height="34" rx="9" fill="#f0fdf4" stroke="#16a34a" stroke-opacity="0.45" stroke-width="1.2"/>
+<text x="694.8" y="771.0" font-size="13" fill="#0f172a" text-anchor="start" font-weight="700">Upload and file validation</text>
+<rect x="682.8" y="793.0" width="234.4" height="51" rx="9" fill="#f0fdf4" stroke="#16a34a" stroke-opacity="0.45" stroke-width="1.2"/>
+<text x="694.8" y="815.0" font-size="13" fill="#0f172a" text-anchor="start" font-weight="700">Background analysis pipeline</text>
+<text x="694.8" y="832.0" font-size="12" fill="#475569" text-anchor="start">One analysis at a time</text>
+<rect x="682.8" y="854.0" width="234.4" height="34" rx="9" fill="#f0fdf4" stroke="#16a34a" stroke-opacity="0.45" stroke-width="1.2"/>
+<text x="694.8" y="876.0" font-size="13" fill="#0f172a" text-anchor="start" font-weight="700">Results, review and statistics</text>
+<rect x="682.8" y="898.0" width="234.4" height="51" rx="9" fill="#f0fdf4" stroke="#16a34a" stroke-opacity="0.45" stroke-width="1.2"/>
+<text x="694.8" y="920.0" font-size="13" fill="#0f172a" text-anchor="start" font-weight="700">Repositories</text>
+<text x="694.8" y="937.0" font-size="12" fill="#475569" text-anchor="start">Access to PostgreSQL</text>
+<path d="M943.2 666 H971.2" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M950.2 660 L943.2 666 L950.2 672" fill="none" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M964.2 660 L971.2 666 L964.2 672" fill="none" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<clipPath id="cp10"><rect x="979.2" y="624.0" width="270.4" height="361.0" rx="14"/></clipPath>
+<rect x="979.2" y="624.0" width="270.4" height="361.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="979.2" y="624.0" width="270.4" height="6" fill="#7c3aed" clip-path="url(#cp10)"/>
+<g transform="translate(997.2,648.0) scale(1.0)" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="18" height="18" rx="3"/><rect x="14.5" y="14.5" width="7" height="7" rx="1"/><path d="M14 3v6M18 3v6M22 3v6M14 27v6M18 27v6M22 27v6M3 14h6M3 18h6M3 22h6M27 14h6M27 18h6M27 22h6"/></g>
+<text x="1045.2" y="673.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">AI &amp; Processing</text>
+<text x="997.2" y="704.0" font-size="13" fill="#475569" text-anchor="start">Local tools</text>
+<path d="M997.2 735.0 H1231.6" stroke="#e2e8f0" stroke-width="1.2"/>
+<rect x="997.2" y="749.0" width="234.4" height="51" rx="9" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.45" stroke-width="1.2"/>
+<text x="1009.2" y="771.0" font-size="13" fill="#0f172a" text-anchor="start" font-weight="700">Ollama + Qwen3:8B</text>
+<text x="1009.2" y="788.0" font-size="12" fill="#475569" text-anchor="start">Extraction and risk analysis</text>
+<rect x="997.2" y="810.0" width="234.4" height="68" rx="9" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.45" stroke-width="1.2"/>
+<text x="1009.2" y="832.0" font-size="13" fill="#0f172a" text-anchor="start" font-weight="700">PyMuPDF, python-docx,</text>
+<text x="1009.2" y="849.0" font-size="13" fill="#0f172a" text-anchor="start" font-weight="700">openpyxl</text>
+<text x="1009.2" y="866.0" font-size="12" fill="#475569" text-anchor="start">Parsers and table rows</text>
+<rect x="997.2" y="888.0" width="234.4" height="51" rx="9" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.45" stroke-width="1.2"/>
+<text x="1009.2" y="910.0" font-size="13" fill="#0f172a" text-anchor="start" font-weight="700">Tesseract OCR</text>
+<text x="1009.2" y="927.0" font-size="12" fill="#475569" text-anchor="start">French + English</text>
+<text x="997.2" y="961.0" font-size="12" fill="#64748b" text-anchor="start" font-style="italic">No data leaves the machine.</text>
+<path d="M1257.6 666 H1285.6" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M1264.6 660 L1257.6 666 L1264.6 672" fill="none" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1278.6 660 L1285.6 666 L1278.6 672" fill="none" stroke="#94a3b8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<clipPath id="cp11"><rect x="1293.6" y="624.0" width="270.4" height="361.0" rx="14"/></clipPath>
+<rect x="1293.6" y="624.0" width="270.4" height="361.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="1293.6" y="624.0" width="270.4" height="6" fill="#d97706" clip-path="url(#cp11)"/>
+<g transform="translate(1311.6,648.0) scale(1.0)" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="18" cy="9" rx="12" ry="5"/><path d="M6 9v18c0 2.800 5.400 5 12 5s12-2.200 12-5V9"/><path d="M6 18c0 2.800 5.400 5 12 5s12-2.200 12-5"/></g>
+<text x="1359.6" y="673.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Database</text>
+<text x="1311.6" y="704.0" font-size="13" fill="#475569" text-anchor="start">PostgreSQL 18, administered with</text>
+<text x="1311.6" y="721.0" font-size="13" fill="#475569" text-anchor="start">pgAdmin</text>
+<path d="M1311.6 735.0 H1546.0" stroke="#e2e8f0" stroke-width="1.2"/>
+<path d="M1316.6 752.5 L1322.6 757.5 L1316.6 762.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1333.6" y="762.0" font-size="13" fill="#1e293b" text-anchor="start">documents, document_pages</text>
+<path d="M1316.6 777.5 L1322.6 782.5 L1316.6 787.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1333.6" y="787.0" font-size="13" fill="#1e293b" text-anchor="start">analysis_runs</text>
+<path d="M1316.6 802.5 L1322.6 807.5 L1316.6 812.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1333.6" y="812.0" font-size="13" fill="#1e293b" text-anchor="start">extracted_fields</text>
+<path d="M1316.6 827.5 L1322.6 832.5 L1316.6 837.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1333.6" y="837.0" font-size="13" fill="#1e293b" text-anchor="start">risk_findings</text>
+<path d="M1316.6 852.5 L1322.6 857.5 L1316.6 862.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1333.6" y="862.0" font-size="13" fill="#1e293b" text-anchor="start">review_decisions</text>
+<rect x="36" y="1014" width="5" height="26" rx="2.5" fill="#2563eb"/>
+<text x="52.0" y="1033.0" font-size="22" fill="#0f2747" text-anchor="start" font-weight="700">Status, tech stack and next steps</text>
+<text x="439.5" y="1033.0" font-size="14" fill="#64748b" text-anchor="start">Honest scope: what exists today and what comes next</text>
+<clipPath id="cp12"><rect x="36.0" y="1055.0" width="490.7" height="368.0" rx="14"/></clipPath>
+<rect x="36.0" y="1055.0" width="490.7" height="368.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="36.0" y="1055.0" width="490.7" height="6" fill="#16a34a" clip-path="url(#cp12)"/>
+<g transform="translate(54.0,1079.0) scale(0.9)" fill="none" stroke="#16a34a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="14"/><circle cx="18" cy="18" r="8"/><circle cx="18" cy="18" r="2.500"/></g>
+<text x="98.0" y="1103.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">V1 (MVP): implemented</text>
+<circle cx="62.0" cy="1116.5" r="7.5" fill="#16a34a"/>
+<path d="M58.4 1116.7 L61.0 1119.3 L65.8 1113.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="1121.0" font-size="13" fill="#1e293b" text-anchor="start">Upload of PDF, DOCX and XLSX files</text>
+<circle cx="62.0" cy="1141.5" r="7.5" fill="#16a34a"/>
+<path d="M58.4 1141.7 L61.0 1144.3 L65.8 1138.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="1146.0" font-size="13" fill="#1e293b" text-anchor="start">Text extraction, table rows and OCR</text>
+<circle cx="62.0" cy="1166.5" r="7.5" fill="#16a34a"/>
+<path d="M58.4 1166.7 L61.0 1169.3 L65.8 1163.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="1171.0" font-size="13" fill="#1e293b" text-anchor="start">Structured extraction (14 fields)</text>
+<circle cx="62.0" cy="1191.5" r="7.5" fill="#16a34a"/>
+<path d="M58.4 1191.7 L61.0 1194.3 L65.8 1188.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="1196.0" font-size="13" fill="#1e293b" text-anchor="start">Ethical risk detection (8 categories)</text>
+<circle cx="62.0" cy="1216.5" r="7.5" fill="#16a34a"/>
+<path d="M58.4 1216.7 L61.0 1219.3 L65.8 1213.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="1221.0" font-size="13" fill="#1e293b" text-anchor="start">Verbatim evidence and page references</text>
+<circle cx="62.0" cy="1241.5" r="7.5" fill="#16a34a"/>
+<path d="M58.4 1241.7 L61.0 1244.3 L65.8 1238.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="1246.0" font-size="13" fill="#1e293b" text-anchor="start">Human review and corrections</text>
+<circle cx="62.0" cy="1266.5" r="7.5" fill="#16a34a"/>
+<path d="M58.4 1266.7 L61.0 1269.3 L65.8 1263.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="1271.0" font-size="13" fill="#1e293b" text-anchor="start">Dashboard and documents list</text>
+<path d="M54.0 1293.0 H508.7" stroke="#e2e8f0" stroke-width="1.2"/>
+<text x="54.0" y="1315.0" font-size="13" fill="#475569" text-anchor="start" font-weight="700">Planned before the end of V1</text>
+<circle cx="62.0" cy="1332.5" r="7.5" fill="none" stroke="#64748b" stroke-width="1.6"/>
+<path d="M62.0 1328.5 V1332.5 L65.0 1334.5" fill="none" stroke="#64748b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="1337.0" font-size="13" fill="#64748b" text-anchor="start" font-style="italic">Export of results (JSON / CSV)</text>
+<circle cx="62.0" cy="1357.5" r="7.5" fill="none" stroke="#64748b" stroke-width="1.6"/>
+<path d="M62.0 1353.5 V1357.5 L65.0 1359.5" fill="none" stroke="#64748b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="76.0" y="1362.0" font-size="13" fill="#64748b" text-anchor="start" font-style="italic">Evaluation on a human-annotated reference set</text>
+<clipPath id="cp13"><rect x="554.7" y="1055.0" width="490.7" height="368.0" rx="14"/></clipPath>
+<rect x="554.7" y="1055.0" width="490.7" height="368.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="554.7" y="1055.0" width="490.7" height="6" fill="#2563eb" clip-path="url(#cp13)"/>
+<g transform="translate(572.7,1079.0) scale(0.9)" fill="none" stroke="#2563eb" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3l14 7-14 7L4 10z"/><path d="M4 18l14 7 14-7M4 26l14 7 14-7"/></g>
+<text x="616.7" y="1103.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Tech stack</text>
+<text x="572.7" y="1119.0" font-size="11" fill="#64748b" text-anchor="start" font-weight="700" letter-spacing="0.8">APPLICATION</text>
+<rect x="572.7" y="1129" width="98.3" height="26" rx="13" fill="#eff6ff" stroke="#2563eb" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="621.8" y="1147.0" font-size="13" fill="#0f172a" text-anchor="middle">Python 3.12</text>
+<rect x="678.9" y="1129" width="73.5" height="26" rx="13" fill="#eff6ff" stroke="#2563eb" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="715.7" y="1147.0" font-size="13" fill="#0f172a" text-anchor="middle">FastAPI</text>
+<rect x="760.4" y="1129" width="78.9" height="26" rx="13" fill="#eff6ff" stroke="#2563eb" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="799.8" y="1147.0" font-size="13" fill="#0f172a" text-anchor="middle">Streamlit</text>
+<rect x="847.3" y="1129" width="58.0" height="26" rx="13" fill="#eff6ff" stroke="#2563eb" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="876.3" y="1147.0" font-size="13" fill="#0f172a" text-anchor="middle">Plotly</text>
+<text x="572.7" y="1183.0" font-size="11" fill="#64748b" text-anchor="start" font-weight="700" letter-spacing="0.8">DATA</text>
+<rect x="572.7" y="1193" width="118.6" height="26" rx="13" fill="#fffbeb" stroke="#d97706" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="632.0" y="1211.0" font-size="13" fill="#0f172a" text-anchor="middle">PostgreSQL 18</text>
+<rect x="699.3" y="1193" width="78.9" height="26" rx="13" fill="#fffbeb" stroke="#d97706" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="738.7" y="1211.0" font-size="13" fill="#0f172a" text-anchor="middle">pgAdmin</text>
+<rect x="786.2" y="1193" width="105.2" height="26" rx="13" fill="#fffbeb" stroke="#d97706" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="838.8" y="1211.0" font-size="13" fill="#0f172a" text-anchor="middle">SQLAlchemy</text>
+<rect x="899.4" y="1193" width="77.4" height="26" rx="13" fill="#fffbeb" stroke="#d97706" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="938.1" y="1211.0" font-size="13" fill="#0f172a" text-anchor="middle">Pydantic</text>
+<text x="572.7" y="1247.0" font-size="11" fill="#64748b" text-anchor="start" font-weight="700" letter-spacing="0.8">AI AND DOCUMENTS</text>
+<rect x="572.7" y="1257" width="68.1" height="26" rx="13" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="606.7" y="1275.0" font-size="13" fill="#0f172a" text-anchor="middle">Ollama</text>
+<rect x="648.7" y="1257" width="89.0" height="26" rx="13" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="693.2" y="1275.0" font-size="13" fill="#0f172a" text-anchor="middle">Qwen3:8B</text>
+<rect x="745.7" y="1257" width="87.4" height="26" rx="13" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="789.4" y="1275.0" font-size="13" fill="#0f172a" text-anchor="middle">PyMuPDF</text>
+<rect x="841.1" y="1257" width="99.8" height="26" rx="13" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="891.0" y="1275.0" font-size="13" fill="#0f172a" text-anchor="middle">python-docx</text>
+<rect x="572.7" y="1291" width="79.7" height="26" rx="13" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="612.5" y="1309.0" font-size="13" fill="#0f172a" text-anchor="middle">openpyxl</text>
+<rect x="660.4" y="1291" width="83.5" height="26" rx="13" fill="#f5f3ff" stroke="#7c3aed" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="702.1" y="1309.0" font-size="13" fill="#0f172a" text-anchor="middle">Tesseract</text>
+<text x="572.7" y="1345.0" font-size="11" fill="#64748b" text-anchor="start" font-weight="700" letter-spacing="0.8">QUALITY</text>
+<rect x="572.7" y="1355" width="61.1" height="26" rx="13" fill="#f0fdf4" stroke="#16a34a" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="603.2" y="1373.0" font-size="13" fill="#0f172a" text-anchor="middle">pytest</text>
+<rect x="641.8" y="1355" width="41.8" height="26" rx="13" fill="#f0fdf4" stroke="#16a34a" stroke-opacity="0.5" stroke-width="1.1"/>
+<text x="662.7" y="1373.0" font-size="13" fill="#0f172a" text-anchor="middle">Git</text>
+<clipPath id="cp14"><rect x="1073.3" y="1055.0" width="490.7" height="368.0" rx="14"/></clipPath>
+<rect x="1073.3" y="1055.0" width="490.7" height="368.0" rx="14" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.2" filter="url(#sh)"/>
+<rect x="1073.3" y="1055.0" width="490.7" height="6" fill="#d97706" clip-path="url(#cp14)"/>
+<g transform="translate(1091.3,1079.0) scale(0.9)" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3c6 4 8 12 6 20H12C10 15 12 7 18 3z"/><circle cx="18" cy="14" r="2.600"/><path d="M12 24l-5 6M24 24l5 6M15 28v4M21 28v4"/></g>
+<text x="1135.3" y="1103.0" font-size="18" fill="#0f172a" text-anchor="start" font-weight="700">Next: V2 ideas</text>
+<path d="M1096.3 1111.5 L1102.3 1116.5 L1096.3 1121.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1113.3" y="1121.0" font-size="13" fill="#1e293b" text-anchor="start">Document-type profiles and loan fields</text>
+<path d="M1096.3 1136.5 L1102.3 1141.5 L1096.3 1146.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1113.3" y="1146.0" font-size="13" fill="#1e293b" text-anchor="start">Verification pass on findings</text>
+<path d="M1096.3 1161.5 L1102.3 1166.5 L1096.3 1171.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1113.3" y="1171.0" font-size="13" fill="#1e293b" text-anchor="start">Original page viewer with the quote highlighted</text>
+<path d="M1096.3 1186.5 L1102.3 1191.5 L1096.3 1196.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1113.3" y="1196.0" font-size="13" fill="#1e293b" text-anchor="start">RAG assistant with page citations</text>
+<path d="M1096.3 1211.5 L1102.3 1216.5 L1096.3 1221.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1113.3" y="1221.0" font-size="13" fill="#1e293b" text-anchor="start">Semantic search and contract comparison</text>
+<path d="M1096.3 1236.5 L1102.3 1241.5 L1096.3 1246.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1113.3" y="1246.0" font-size="13" fill="#1e293b" text-anchor="start">Authentication, roles and migrations</text>
+<path d="M1096.3 1261.5 L1102.3 1266.5 L1096.3 1271.5" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1113.3" y="1271.0" font-size="13" fill="#1e293b" text-anchor="start">Batch processing and Arabic documents</text>
+<rect x="36" y="1457" width="1528" height="78" rx="16" fill="url(#hg)"/>
+<text x="68.0" y="1490.0" font-size="18" fill="#ffffff" text-anchor="start" font-weight="700">A decision-support tool, not a legal authority.</text>
+<text x="68.0" y="1515.0" font-size="14" fill="#cbd5e1" text-anchor="start">Every result keeps its verbatim evidence and page. A human reviewer always has the final word.</text>
+<text x="1532.0" y="1490.0" font-size="20" fill="#93c5fd" text-anchor="end" font-weight="700">Smarter analysis.</text>
+<text x="1532.0" y="1515.0" font-size="20" fill="#ffffff" text-anchor="end" font-weight="700">More trust.</text><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTozNjNlMWJkMi03NTgwLTRkNjMtYTczZC00OTdmYzNjOTkxY2EAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaIAJ6r8FJHaNrO3p2ClQnQoAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo2NzdlMzg2OS1lMzFjLTQwNzktOWJiNi0yNGQzOTQyMjQxM2ZscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoY3RqVXMk4Mpz6xJeltF1KgAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggONjXqVvj6chYU39M0Zu7yMwQUQQCQawsLMs5YmvRcaKkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaGrFEsPl9+XTnWxel3ncIAQAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIMUlqkdZEw3FhmN+BUHbJ/aR9ACdfzXB48Ptv9ivjofmZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GakDZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjM2M2UxYmQyLTc1ODAtNGQ2My1hNzNkLTQ5N2ZjM2M5OTFjYS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjBhMGIxMGUwLWUwMGYtNDk4YS1hZGFlLTcwMDQ2MTNmODdiZnJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCA42NepW+PpyFhTf0zRm7vIzBBRBAJBrCwsyzlia9FxoqJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggP0PGEVlB03AH4mkbcoNMwtWuOuIxzpme+Ol+F7S6tqGiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggvv0i1deFWC4LqmVUEaMGbFAufAohfKe0bN2DZqEIRTx0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQP7wmjvUIh0YzILRH+yvUY/1dwWa+wqCVNZSwiNKrTCpojIIv1y2IOckl3qR6BfTFP0cg/UBlJ3XUadKBRK0jw0=</c2pa:manifest></metadata></svg>
